@@ -1,1 +1,3 @@
-<h1>Guide</h1>
+<h1>Guide Steps</h1>
+
+- clone this repo
