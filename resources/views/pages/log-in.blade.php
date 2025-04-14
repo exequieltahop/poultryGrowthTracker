@@ -13,7 +13,8 @@
                 <label for="password" class="input-group-text">
                     <i class="bi bi-key"></i>
                 </label>
-                <input type="password" name="password" id="password" class="form-control" required autocomplete="current-password">
+                <input type="password" name="password" id="password" class="form-control" required
+                    autocomplete="current-password">
                 <i class="input-group-text bi bi-eye" id="show-password" style="cursor: pointer;"></i>
             </div>
 
@@ -30,9 +31,8 @@
         window.addEventListener('DOMContentLoaded', ()=>{
             // show password
             show_password();
-
             // log in
-            login();
+            sign_in();
         });
 
         // show password
@@ -121,6 +121,49 @@
                     $('#btn-submit-login').attr('disabled', false);
                 }
             });
-            }
+        }
+
+
+        // mysql base login
+        function sign_in(){
+            $('#form-login').on('submit', async function(e){
+                e.preventDefault();
+
+                // disabled btn
+                $('#btn-submit-login').attr('disabled', true);
+
+                console.log($(this));
+
+                try {
+                    // form data and fetch api
+                    const formData = new FormData(this);
+                    const response = await fetch('/login-user', {
+                        method : 'POST',
+                        headers : {
+                            'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')
+                        },
+                        body : formData
+                    });
+
+                    if(!response.ok){
+                        throw new Error("");
+                    }else{
+                        toastr.success("Successfully Login!", "Succes");
+
+                        setTimeout(() => {
+                            window.location.href = '/home';
+                        }, 1500);
+                    }
+                } catch (error) {
+                    /**
+                     * catch errors and display toastr error
+                     * enable submit btn
+                    */
+                    console.error(error.message);
+                    toastr.error("Invalid Credentails", "Error");
+                    $('#btn-submit-login').attr('disabled', false);
+                }
+            });
+        }
     </script>
 </x-guest-layout>
