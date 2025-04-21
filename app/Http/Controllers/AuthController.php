@@ -23,13 +23,13 @@ class AuthController extends Controller
                 'password' => $request->password
             ])){
                 Log::warning("Invalid Credential"); // log warning
-                return response()->json([], 401); // response 401
+                return response(null, 401); // response 401
             }
 
-            return response()->json([], 200); // response 200
+            return response(null, 200); // response 200
         } catch (\Throwable $th) {
             Log::error($th->getMessage()); // log errors
-            return response()->json([], 500); // response 500
+            return response(null, 500); // response 500
         }
     }
 

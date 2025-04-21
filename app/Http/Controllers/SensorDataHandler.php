@@ -11,11 +11,11 @@ class SensorDataHandler extends Controller
     public function saveSensorData(Request $request) {
         try {
             // validate request
-            // $request->validate([
-            //     'temperature' => 'required',
-            //     'humidity' => 'required',
-            //     'amonia' => 'required'
-            // ]);
+            $request->validate([
+                'temperature' => 'required',
+                'humidity' => 'required',
+                'amonia' => 'required'
+            ]);
 
             // save database
             SensorReading::create([

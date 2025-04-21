@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{csrf_token()}}">
     <title>{{$title}}</title>
+    <link rel="shortcut icon" href="{{asset('assets/icon/csit.png')}}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-light">
@@ -14,7 +15,9 @@
         <nav>
             <ul class="nav">
                 <li class="nav-item">
-                    <a href="{{route('logout')}}" class="nav-link">Log Out</a>
+                    <a href="{{route('logout')}}" class="nav-link">
+                        <i class="bi bi-box-arrow-left fw-bold text-primary" style="font-style: normal;"> Log Out</i>
+                    </a>
                 </li>
             </ul>
         </nav>

@@ -1,7 +1,5 @@
 <x-auth-layout>
-    <section class="container">
-        {{-- <h1>{{__("Welcome user ". session('email'))}}</h1> --}}
-
+    <section class="container p-4">
         <div class="row">
             <div class="col-sm-4 py-3">
                 <div class="bg-white h-100 shadow-lg rounded p-3 d-flex align-items-start gap-2">
@@ -30,6 +28,24 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row mt-2" style="row-gap: 1em;">
+
+            {{-- bulb state --}}
+            <div class="col-sm-6">
+                <div class="bg-white p-3 border rounded shadow d-flex flex-column align-items-center" id="bulb-state-wrapper">
+                </div>
+            </div>
+
+            {{-- fan state --}}
+            <div class="col-sm-6">
+                <div class="bg-white p-3 border rounded shadow d-flex flex-column align-items-center"
+                    id="fan-state-container">
+
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -63,6 +79,74 @@
                     temp_text.innerHTML = temp + '&deg C';
                     humid_text.textContent = humidity + '%';
                     amonia_text.textContent = amonia + 'ppm';
+
+                    let fanOn = false;
+                    let bulbOn = false;
+
+                    if (temp > 32.0) {
+                        // Very hot — turn on fan
+                        fanOn = true;
+                        if (humidity < 50.0) {
+                            // Dry & hot — just fan
+                            bulbOn = false;
+                        } else {
+                            // Hot & humid — fan only, no bulb
+                            bulbOn = false;
+                        }
+                    } else if (temp >= 28.0 && temp <= 32.0) {
+                        if (humidity >= 45.0 && humidity <= 65.0 && amonia >= 5.0 && amonia <= 15.0) {
+                            // Comfortable zone — no fan, no bulb
+                            fanOn = false;
+                            bulbOn = false;
+                        } else if (amonia > 15.0) {
+                            // Dangerous amonia
+                            fanOn = true;
+                            bulbOn = false;
+                        } else {
+                            // Slight adjustments
+                            fanOn = false;
+                            bulbOn = false;
+                        }
+                    } else if (temp < 28.0) {
+                        if (humidity < 45.0 && amonia < 5.0) {
+                            // Cold & dry — turn on bulb
+                            fanOn = false;
+                            bulbOn = true;
+                        } else if (humidity > 65.0 || ammonia > 15.0) {
+                            // Cold but bad air quality — fan & bulb both
+                            fanOn = true;
+                            bulbOn = true;
+                        } else {
+                            // Cold but tolerable
+                            fanOn = false;
+                            bulbOn = false;
+                        }
+                    }
+
+                    const fan_wrapper = document.getElementById('fan-state-container');
+                    const bulb_wrapper = document.getElementById('bulb-state-wrapper');
+
+                    if(fanOn == true){
+                        fan_wrapper.innerHTML = `<i class="bi bi-fan text-success" style="font-size: 5rem;"></i>
+                                                <h1 class="text-success">Fan On</h1>`;
+                    }else{
+
+                        fan_wrapper.innerHTML = `<i class="bi bi-fan text-secondary" style="font-size: 5rem;"></i>
+                                                <h1 class="text-secondary">Fan Off</h1>`;
+
+                                            }
+                    if(bulbOn == true){
+                        bulb_wrapper.innerHTML = `<i class="bi bi-lightbulb-fill text-warning" style="font-size: 5rem;"></i>
+                                                <h1 class="text-warning">Bulb On</h1>`;
+                    }else{
+
+                        bulb_wrapper.innerHTML = `<i class="bi bi-lightbulb-fill text-secondary" style="font-size: 5rem;"></i>
+                                                <h1 class="text-secondary">Bulb Off</h1>`;
+                    }
+
+                    // Output the result
+                    console.log("Fan is " + (fanOn ? "ON" : "OFF"));
+                    console.log("Bulb is " + (bulbOn ? "ON" : "OFF"));
                 }
             } catch (error) {
                 console.error(error);

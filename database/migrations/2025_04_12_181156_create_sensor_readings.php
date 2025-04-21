@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('sensor_readings', function (Blueprint $table) {
             $table->id();
-            $table->decimal('temperature', 8, 2)->notNull()->default('0.00');
-            $table->decimal('humidity', 8, 2)->notNull()->default('0.00');
-            $table->decimal('amonia', 8, 2)->notNull()->default('0.00');
+            $table->decimal('temperature', 8, 8)->notNull()->default('0.00');
+            $table->decimal('humidity', 8, 8)->notNull()->default('0.00');
+            $table->decimal('amonia', 8, 8)->notNull()->default('0.00');
             $table->timestamps();
             $table->softDeletes();
         });

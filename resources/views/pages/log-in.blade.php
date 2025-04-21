@@ -132,8 +132,6 @@
                 // disabled btn
                 $('#btn-submit-login').attr('disabled', true);
 
-                console.log($(this));
-
                 try {
                     // form data and fetch api
                     const formData = new FormData(this);
