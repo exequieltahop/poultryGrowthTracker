@@ -20,7 +20,7 @@
 
             {{-- btns --}}
             <div class="d-flex justify-content-end align-items-center gap-2">
-                <a href="" class="btn btn-primary">Sign up</a>
+                <a href="{{route('sign-up')}}" class="btn btn-primary">Sign up</a>
                 <button class="btn btn-primary" type="submit" id="btn-submit-login">Sign in</button>
             </div>
         </form>

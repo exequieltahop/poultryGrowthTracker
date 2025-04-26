@@ -1,6 +1,7 @@
 import './bootstrap';
 import $ from 'jquery';
 import toastr from 'toastr';
+import '../../node_modules/bootstrap/dist/js/bootstrap.bundle.js'
 
 window.$ = $;
 window.toastr = toastr;

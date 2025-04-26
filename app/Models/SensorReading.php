@@ -16,4 +16,24 @@ class SensorReading extends Model
         'humidity',
         'amonia'
     ];
+
+    // get current data
+    public static function getCurrentData() {
+        try {
+            return self::select('*')->orderBy('created_at', 'desc')->first();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    // scope get ten last records
+    public function scopeGetLastTen($query, string $type) {
+        try {
+            return $query->select($type, 'created_at')
+                ->orderBy('created_at', 'desc')
+                ->limit(10);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
