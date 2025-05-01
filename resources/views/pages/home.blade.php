@@ -1,7 +1,9 @@
 <x-auth-layout>
+
     {{-- dashboard data --}}
     <section class="container p-4">
         <div class="row">
+
             {{-- temperature --}}
             <div class="col-sm-4 py-3 record-container" data-id="temperature" style="position: relative;">
                 <div class="bg-white h-100 shadow-lg rounded p-3 d-flex align-items-start gap-2 temp">
@@ -10,24 +12,6 @@
                         <h5>Current Temperature</h5>
                         <span class="temp-text fs-5">Loading...</span>
                     </div>
-                </div>
-
-                {{-- hover info 10 records --}}
-                <div class="bg-white rounded shadow-lg hover-info-temperature d-none "
-                    style="position: absolute; top: 0; z-index: 25; width: 95%;">
-                    <div class="p-3 d-flex justify-content-between align-items-center"
-                        style="border-bottom: 1px solid rgb(168, 168, 168);">
-                        <i class="bi bi-card-list text-info fw-bold fs-5" style="font-style: normal;"> Last 10
-                            Records</i>
-                        <i class="bi bi-x-lg fs-5" style="cursor: pointer;"></i>
-                    </div>
-                    <ul class="p-0 p-4" style="list-style: none;">
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                    </ul>
                 </div>
             </div>
 
@@ -40,53 +24,16 @@
                         <span class="humid-text fs-5">Loading...</span>
                     </div>
                 </div>
-
-                {{-- hover info 10 records --}}
-                <div class="bg-white rounded shadow-lg hover-info-humidity d-none"
-                    style="position: absolute; top: 0; z-index: 25; width: 95%;">
-                    <div class="p-3 d-flex justify-content-between align-items-center"
-                        style="border-bottom: 1px solid rgb(168, 168, 168);">
-                        <i class="bi bi-card-list text-info fw-bold fs-5" style="font-style: normal;"> Last 10
-                            Records</i>
-                        <i class="bi bi-x-lg fs-5" style="cursor: pointer;"></i>
-                    </div>
-                    <ul class="p-0 p-4" style="list-style: none;">
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                    </ul>
-                </div>
             </div>
 
-            {{-- amonia --}}
+            {{-- ammonia --}}
             <div class="col-sm-4 py-3 record-container" data-id="amonia" style="position: relative;">
-
                 <div class="bg-white h-100 shadow-lg rounded p-3 d-flex align-items-start gap-2 amon">
                     <i class="bi bi-tropical-storm text-warning" style="font-size: 2.5rem;"></i>
                     <div class="d-grid fw-bold text-warning">
-                        <h5>Current Amonia Level</h5>
+                        <h5>Current Ammonia Level</h5>
                         <span class="amonia-text fs-5">Loading...</span>
                     </div>
-                </div>
-
-                {{-- hover info 10 records --}}
-                <div class="bg-white rounded shadow-lg hover-info-amonia d-none"
-                    style="position: absolute; top: 0; z-index: 25; width: 95%;">
-                    <div class="p-3 d-flex justify-content-between align-items-center"
-                        style="border-bottom: 1px solid rgb(168, 168, 168);">
-                        <i class="bi bi-card-list text-info fw-bold fs-5" style="font-style: normal;"> Last 10
-                            Records</i>
-                        <i class="bi bi-x-lg fs-5" style="cursor: pointer;"></i>
-                    </div>
-                    <ul class="p-0 p-4" style="list-style: none;">
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                        <li class="mb-2">Lorem, ipsum dolor.</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -111,19 +58,29 @@
 
         </div>
     </section>
-    {{-- <button data-bs-toggle="modal" data-bs-target="#modal-last-ten-records">Show Modal</button> --}}
 
     {{-- modal last 10 records --}}
     <div class="modal fade" aria-hidden="true" id="modal-last-ten-records" tabindex="-1" aria-labelledby="#modal-title">
         <div class="modal-dialog modal-dialog-centered" role="dialog">
             <div class="modal-content" role="document">
                 <div class="modal-header">
-                    <h5 class="m-0" id="modal-title"><i class="bi bi-card-list text-primary" style="font-style: normal;"> LAST 10 RECORDS</i> </h5>
+                    <h5 class="m-0" id="modal-title"><i class="bi bi-card-list text-primary"
+                            style="font-style: normal;"> LAST 10 RECORDS</i> </h5>
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    {{-- filter input --}}
+                    <form action="" id="form-filter-date"
+                        class="d-flex justify-content-between align-items-center mb-2 gap-2">
+                        <input type="date" class="form-control border" name="date" id="date">
+                        <button type="submit" class="btn btn-primary" style="height: fit-content; text-wrap: nowrap;">
+                            <i class="bi bi-filter" style="font-style: normal;"> Filter</i>
+                        </button>
+                    </form>
+                    <hr>
                     {{-- content --}}
-                    <ul class="p-0 p-4" style="list-style: none;" id="ul-last-record-holder">
+                    <ul class="p-0 p-4" style="list-style: none; max-height: 60vh; overflow: auto;"
+                        id="ul-last-record-holder">
                     </ul>
                 </div>
             </div>
@@ -140,6 +97,7 @@
 
             // init hover to view 10 last record of temperature
             hoverTempContainer();
+
         });
 
         // get data statistic
@@ -149,7 +107,7 @@
                 const response = await fetch(url, {
                     method : 'GET',
                     headers : {
-                        'X-CSRF_TOKEN' : document.querySelector('meta[name="csrf-token"]').content
+                        'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
                     }
                 });
 
@@ -251,6 +209,7 @@
             Array.from(temp_container).forEach(item => {
                 item.onclick = async (e)=>{
                     e.stopImmediatePropagation();
+                    e.preventDefault();
 
                     const type = e.currentTarget.dataset.id;
 
@@ -271,19 +230,22 @@
                         }
                         if(type == 'humidity'){
                             ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
-                                                    <span>Temperature : ${element.humidity}</span>
+                                                    <span>Humidity : ${element.humidity}</span>
                                                     <span>Date : ${element.date}</span>
                                                 </li>`;
                         }
                         if(type == 'amonia'){
                             ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
-                                                    <span>Temperature : ${element.amonia}</span>
+                                                    <span>Ammonia : ${element.amonia}</span>
                                                     <span>Date : ${element.date}</span>
                                                 </li>`;
                         }
 
                     }
+
                     modal_records.show();
+
+                    filterLogs(document.getElementById('form-filter-date'), type, ul_parent);
                 };
             });
         }
@@ -308,6 +270,76 @@
             } catch (error) {
                 throw error;
             }
+        }
+
+        // filter log
+        async function filterLogs(form, type, ul_parent) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                try {
+                    /**
+                     * prepare url
+                     * prepare get response
+                    */
+                   const formData = new FormData(e.target);
+
+                   formData.append('type', type);
+
+                    const url = `/filter-logs`;
+                    const response = await fetch(url, {
+                        method : 'POST',
+                        headers : {
+                            'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body : formData
+                    });
+
+                    /**
+                     * if response was not ok
+                     * then throw new Error
+                    */
+                    if(!response){
+                        throw new Error("");
+                    }else{
+                        /**
+                         * else process response logs
+                         * with the filtered date
+                        */
+                        const data = await response.json();
+
+                        ul_parent.innerHTML = ``;
+
+                        for (const element of data) {
+                            if(type == 'temperature'){
+                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                                        <span>Temperature : ${element.temperature}</span>
+                                                        <span>Date : ${element.date}</span>
+                                                    </li>`;
+                            }
+                            if(type == 'humidity'){
+                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                                        <span>Humidity : ${element.humidity}</span>
+                                                        <span>Date : ${element.date}</span>
+                                                    </li>`;
+                            }
+                            if(type == 'amonia'){
+                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                                        <span>Ammonia : ${element.amonia}</span>
+                                                        <span>Date : ${element.date}</span>
+                                                    </li>`;
+                            }
+
+                        }
+                    }
+                } catch (error) {
+                    /**
+                     * log errors
+                     * show error toastr
+                     */
+                    console.error(error.message);
+                    toastr.error("Something went wrong, Pls try again, If the problem persist, Pls Contact Developer", "Error");
+                }
+            });
         }
     </script>
 </x-auth-layout>

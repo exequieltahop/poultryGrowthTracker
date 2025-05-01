@@ -24,5 +24,6 @@ Route::get('/home', function(){
 
 Route::get('/get-sensor-current-data', [SensorDataHandler::class, 'getCurrentSensorData']);
 Route::get('/get-ten-records/{type}', [SensorDataHandler::class, 'getTenRecord']);
+Route::post('/filter-logs', [SensorDataHandler::class, 'getFilteredRecords']);
 
 Route::get('/seeder', [SensorDataHandler::class, 'seeder']);

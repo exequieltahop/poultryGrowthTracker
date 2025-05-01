@@ -139,7 +139,7 @@ class SensorDataHandler extends Controller
         try {
             $data = SensorReading::getLastTen($type)
                 ->get()
-                ->map(function($query){
+                ->map(function ($query) {
                     $query->date = $query->created_at->format('F. j, Y');
                     return $query;
                 });
@@ -149,6 +149,28 @@ class SensorDataHandler extends Controller
              * log errors
              * response 500
              */
+            Log::error($th->getMessage());
+            return response(null, 500);
+        }
+    }
+
+    // filter record
+    public function getFilteredRecords(Request $request) {
+        try {
+            // validate
+            $request->validate([
+                'type' => 'required',
+                'date' => ['required', 'date']
+            ]);
+            // dd($request->date);
+            $data = SensorReading::getFilteredRecord($request->date, $request->type)
+                ->get()
+                ->map(function ($query) {
+                    $query->date = $query->created_at->format('F. j, Y');
+                    return $query;
+                }); // get readings
+            return response()->json($data);
+        } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response(null, 500);
         }

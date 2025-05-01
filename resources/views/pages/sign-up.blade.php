@@ -7,19 +7,19 @@
                 <label for="email" class="input-group-text">
                     <i class="bi bi-person-fill"></i>
                 </label>
-                <input type="text" name="name" id="name" class="form-control" required autocomplete="name">
+                <input type="text" name="name" id="name" class="form-control" placeholder="name" required autocomplete="name">
             </div>
             <div class="input-group mb-3">
                 <label for="email" class="input-group-text">
                     <i class="bi bi-person-fill"></i>
                 </label>
-                <input type="email" name="email" id="email" class="form-control" required autocomplete="email">
+                <input type="email" name="email" id="email" class="form-control" placeholder="email@example.com" required autocomplete="email">
             </div>
             <div class="input-group mb-3">
                 <label for="password" class="input-group-text">
                     <i class="bi bi-key"></i>
                 </label>
-                <input type="password" name="password" id="password" class="form-control" required
+                <input type="password" name="password" id="password" class="form-control" placeholder="********" minlength="8" required
                     autocomplete="current-password" minlength="8">
                 <i class="input-group-text bi bi-eye" id="show-password" style="cursor: pointer;"></i>
             </div>

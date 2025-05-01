@@ -7,13 +7,13 @@
                 <label for="email" class="input-group-text">
                     <i class="bi bi-person-fill"></i>
                 </label>
-                <input type="email" name="email" id="email" class="form-control" required autocomplete="email">
+                <input type="email" name="email" id="email" class="form-control" placeholder="email@example.com" required autocomplete="email">
             </div>
             <div class="input-group mb-3">
                 <label for="password" class="input-group-text">
                     <i class="bi bi-key"></i>
                 </label>
-                <input type="password" name="password" id="password" class="form-control" required
+                <input type="password" name="password" id="password" class="form-control" placeholder="********" minlength="8" required
                     autocomplete="current-password">
                 <i class="input-group-text bi bi-eye" id="show-password" style="cursor: pointer;"></i>
             </div>
@@ -23,6 +23,13 @@
                 <a href="{{route('sign-up')}}" class="btn btn-primary">Sign up</a>
                 <button class="btn btn-primary" type="submit" id="btn-submit-login">Sign in</button>
             </div>
+
+            {{-- btn install app --}}
+            <button id="installPwaBtn" type="button" class="nav-link d-flex align-items-center gap-2 text-primary fw-bold"
+                style="display: none;">
+                <i class="bi bi-cloud-download"></i>
+                <span>Install App</span>
+            </button>
         </form>
     </section>
 

@@ -36,4 +36,14 @@ class SensorReading extends Model
             throw $th;
         }
     }
+    // filtered records
+    public function scopeGetFilteredRecord($query, $date, $type) {
+        try {
+            return $query->select($type, 'created_at')
+                ->whereDate('created_at', $date)
+                ->orderBy('created_at', 'desc');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

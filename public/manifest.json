@@ -1,0 +1,17 @@
+{
+    "name": "Smart Poultry Monitoring System",
+    "short_name": "SPMS",
+    "start_url": "/index.php",
+    "background_color": "#001535",
+    "description": "",
+    "display": "fullscreen",
+    "theme_color": "#001535",
+    "icons": [
+        {
+            "src": "chicken.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
