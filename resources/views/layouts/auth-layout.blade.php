@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" href="{{ asset('chicken.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
-    <title>{{$title}}</title>
+    <title>{{$title ?? 'App'}}</title>
     <link rel="shortcut icon" href="{{asset('assets/icon/csit.png')}}" type="image/x-icon">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -32,6 +32,24 @@
                         <span>Install App</span>
                     </button>
                 </li>
+
+                {{-- home --}}
+                <li class="nav-item">
+                    <a href="/home" class="nav-link d-flex align-items-center gap-2 text-primary fw-bold"
+                        style="display: none;">
+                        <i class="bi bi-house-door"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                {{-- logs --}}
+                <li class="nav-item">
+                    <a href="/logs" class="nav-link d-flex align-items-center gap-2 text-primary fw-bold"
+                        style="display: none;">
+                        <i class="bi bi-journal-text"></i>
+                        <span>Logs</span>
+                    </a>
+                </li>
+
                 {{-- logout  --}}
                 <li class="nav-item">
                     <a href="{{route('logout')}}" class="nav-link">

@@ -27,3 +27,16 @@ Route::get('/get-ten-records/{type}', [SensorDataHandler::class, 'getTenRecord']
 Route::post('/filter-logs', [SensorDataHandler::class, 'getFilteredRecords']);
 
 Route::get('/seeder', [SensorDataHandler::class, 'seeder']);
+
+Route::get('/logs', function(){
+    if(!Auth::user()){
+        return redirect('/');
+    }else{
+        $paginator = App\Http\Controllers\SensorDataHandler::getDataTableLogsData();
+        return view('pages.logs', compact('paginator'));
+    }
+});
+
+Route::get('/get-table-data-logs', [SensorDataHandler::class, 'getDataTableLogsData']);
+
+Route::get('/update-time/{date}', [SensorDataHandler::class, 'updateTime']);

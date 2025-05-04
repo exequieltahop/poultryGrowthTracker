@@ -1,6 +1,7 @@
 @import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 @import '../../node_modules/bootstrap-icons/font/bootstrap-icons.css';
 @import '../../node_modules/toastr/build/toastr.css';
+@import '../../node_modules/apexcharts/dist/apexcharts.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

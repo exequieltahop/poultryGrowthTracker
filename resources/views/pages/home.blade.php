@@ -1,4 +1,11 @@
 <x-auth-layout>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    {{-- section chart temperature --}}
+    <div class="container bg-white p-4 mt-4 d-flex justify-content-center overflow-auto">
+        <div id="combined-chart" class="" style="width: 100%; max-width: 1080px;"></div>
+    </div>
+    <!--{{dump(App\Models\SensorReading::select('*')->orderBy('created_at', 'DESC')->limit(10)->get())}}-->
 
     {{-- dashboard data --}}
     <section class="container p-4">
@@ -87,6 +94,8 @@
         </div>
     </div>
 
+
+
     {{-- script --}}
     <script>
         window.addEventListener('DOMContentLoaded', ()=>{
@@ -97,6 +106,20 @@
 
             // init hover to view 10 last record of temperature
             hoverTempContainer();
+
+            // // render chart
+            // renderTemperatureChart();
+
+            // // render humidity
+            // renderHumidityChart();
+
+            // // render temperature
+            // renderAmmoniaChart();
+
+            // Call the function on page load or whenever needed
+            renderCombinedChart();
+
+
 
         });
 
@@ -119,7 +142,7 @@
                     // get data from server
                     const temp = Number(Number(response_json.temperature).toFixed(2));
                     const humidity = Number(Number(response_json.humidity).toFixed(2));
-                    const amonia = Number(Number(response_json.amonia).toFixed(2));
+                    const amonia = Number(response_json.amonia);
 
 
                     // get the temperature,humidity,and amonia text container
@@ -213,6 +236,8 @@
 
                     const type = e.currentTarget.dataset.id;
 
+                    console.log(type);
+
                     const data = await tenlogs(type);
 
                     const modal_records = new bootstrap.Modal(document.getElementById('modal-last-ten-records'));
@@ -245,7 +270,19 @@
 
                     modal_records.show();
 
-                    filterLogs(document.getElementById('form-filter-date'), type, ul_parent);
+                    if(type == 'temperature'){
+                        console.log(1);
+                        await filterLogs(document.getElementById('form-filter-date'), 'temperature', ul_parent);
+                    }
+                    if(type == 'amonia'){
+                        await filterLogs(document.getElementById('form-filter-date'), 'amonia', ul_parent);
+                        console.log(2);
+                    }
+                    if(type == 'humidity'){
+
+                        await filterLogs(document.getElementById('form-filter-date'), 'humidity', ul_parent);
+                        console.log(3);
+                    }
                 };
             });
         }
@@ -273,73 +310,210 @@
         }
 
         // filter log
-        async function filterLogs(form, type, ul_parent) {
-            form.addEventListener('submit', async function(e) {
+        function filterLogs(form, type, ul_parent) {
+            form.onsubmit = async function(e) {
                 e.preventDefault();
-                try {
-                    /**
-                     * prepare url
-                     * prepare get response
-                    */
-                   const formData = new FormData(e.target);
+                e.stopImmediatePropagation();
 
-                   formData.append('type', type);
+                try {
+                    console.log(type + " sa filter");
+
+                    const formData = new FormData(e.target);
+                    formData.set('type', type); // use set just in case
 
                     const url = `/filter-logs`;
                     const response = await fetch(url, {
-                        method : 'POST',
-                        headers : {
-                            'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').content
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
-                        body : formData
+                        body: formData
                     });
 
-                    /**
-                     * if response was not ok
-                     * then throw new Error
-                    */
-                    if(!response){
-                        throw new Error("");
-                    }else{
-                        /**
-                         * else process response logs
-                         * with the filtered date
-                        */
-                        const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch filtered logs.");
+                    }
 
-                        ul_parent.innerHTML = ``;
+                    const data = await response.json();
+                    ul_parent.innerHTML = ``;
 
-                        for (const element of data) {
-                            if(type == 'temperature'){
-                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
-                                                        <span>Temperature : ${element.temperature}</span>
-                                                        <span>Date : ${element.date}</span>
-                                                    </li>`;
-                            }
-                            if(type == 'humidity'){
-                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
-                                                        <span>Humidity : ${element.humidity}</span>
-                                                        <span>Date : ${element.date}</span>
-                                                    </li>`;
-                            }
-                            if(type == 'amonia'){
-                                ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
-                                                        <span>Ammonia : ${element.amonia}</span>
-                                                        <span>Date : ${element.date}</span>
-                                                    </li>`;
-                            }
-
+                    for (const element of data) {
+                        if (type === 'temperature') {
+                            ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                <span>Temperature : ${element.temperature}</span>
+                                <span>Date : ${element.date}</span>
+                            </li>`;
+                        } else if (type === 'humidity') {
+                            ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                <span>Humidity : ${element.humidity}</span>
+                                <span>Date : ${element.date}</span>
+                            </li>`;
+                        } else if (type === 'amonia') {
+                            ul_parent.innerHTML += `<li class="mb-3 d-flex justify-content-between align-items-center">
+                                <span>Ammonia : ${element.amonia}</span>
+                                <span>Date : ${element.date}</span>
+                            </li>`;
                         }
                     }
+
+                    e.target.reset();
+
                 } catch (error) {
-                    /**
-                     * log errors
-                     * show error toastr
-                     */
                     console.error(error.message);
-                    toastr.error("Something went wrong, Pls try again, If the problem persist, Pls Contact Developer", "Error");
+                    toastr.error("Something went wrong. Please try again.", "Error");
                 }
-            });
+            };
         }
+
+        // render chart function
+        function renderCombinedChart() {
+            let temperatureData = [];
+            let humidityData = [];
+            let ammoniaData = [];
+
+            const options = {
+                series: [
+                    { name: 'Temperature', data: temperatureData },
+                    { name: 'Humidity', data: humidityData },
+                    { name: 'Ammonia', data: ammoniaData }
+                ],
+                chart: {
+                    id: 'realtime-multi-line',
+                    type: 'line',
+                    height: 350,
+                    zoom: {
+                        autoScaleYaxis: true
+                    }
+                },
+                annotations: {
+                    yaxis: [
+                        {
+                            y: 30,
+                            borderColor: '#999',
+                            label: {
+                                show: true,
+                                text: 'Support',
+                                style: {
+                                    color: "#fff",
+                                    background: '#00E396'
+                                }
+                            }
+                        }
+                    ]
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth'
+                },
+                xaxis: {
+                    type: 'datetime', // Use 'datetime' type for x-axis to handle timestamps correctly
+                    tickAmount: 6,
+                    labels: {
+                        formatter: function(value) {
+                            // Format the datetime string to the desired format
+                            const date = new Date(value);
+                            const formattedDate = date.toLocaleString('en-GB', {
+                                weekday: 'short', // Example: 'Mon'
+                                year: 'numeric', // Example: '2025'
+                                month: 'short', // Example: 'May'
+                                day: 'numeric', // Example: '3'
+                                hour: 'numeric', // Example: '5'
+                                minute: 'numeric', // Example: '57'
+                                hour12: true // Use 12-hour format (AM/PM)
+                            });
+                            return formattedDate; // Return the formatted string to show on x-axis
+                        }
+                    }
+                },
+                tooltip: {
+                    x: {
+                        formatter: function(value) {
+                            const date = new Date(value);
+                            const formattedDate = date.toLocaleString('en-GB', {
+                                weekday: 'short', // Example: 'Mon'
+                                year: 'numeric', // Example: '2025'
+                                month: 'short', // Example: 'May'
+                                day: 'numeric', // Example: '3'
+                                hour: 'numeric', // Example: '5'
+                                minute: 'numeric', // Example: '57'
+                                hour12: true // Use 12-hour format (AM/PM)
+                            });
+                            return formattedDate; // Show the formatted date in the tooltip
+                        }
+                    },
+                    y: {
+                        formatter: function(val) {
+                            return val; // You can also modify the y-axis value here if needed
+                        }
+                    }
+                },
+                legend: {
+                    show: true,
+                    position: 'bottom'
+                }
+            };
+
+            const chart = new ApexCharts(document.querySelector("#combined-chart"), options);
+            chart.render();
+
+            // Simulate real-time data update
+            setInterval(async () => {
+                try {
+                    const url = `/get-sensor-current-data`;
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Request failed");
+                    }
+
+                    const data = await response.json();
+
+                    console.log(data);
+
+                    const temperature = parseFloat(Number(data.temperature).toFixed(2));
+                    const humidity = parseFloat(Number(data.humidity).toFixed(2));
+                    const ammonia = parseFloat(data.amonia);
+
+                    // Use the Unix timestamp for the datetime
+                    let rawDate = data.created_at_formatted;  // Example: "May. 3, 2025 17:57 PM"
+                    let newDate = new Date(rawDate); // Convert to Date object
+                    let _newDate = newDate.getTime(); // Get Unix timestamp (milliseconds)
+
+                    console.log(_newDate); // Check the timestamp
+
+                    // Add new data points with the Unix timestamp (milliseconds)
+                    temperatureData.push([_newDate, temperature]);
+                    humidityData.push([_newDate, humidity]);
+                    ammoniaData.push([_newDate, ammonia]);
+
+                    // Keep the last 50 points (optional)
+                    if (temperatureData.length > 50) {
+                        temperatureData.shift();
+                        humidityData.shift();
+                        ammoniaData.shift();
+                    }
+
+                    // Update chart with all series
+                    chart.updateSeries([
+                        { name: 'Temperature', data: temperatureData },
+                        { name: 'Humidity', data: humidityData },
+                        { name: 'Ammonia', data: ammoniaData }
+                    ]);
+                } catch (error) {
+                    console.error(error.message);
+                    toastr.error("Something Went Wrong, Please Try Again. Thank You!", "Error");
+                }
+            }, 2000);
+        }
+
+
+
     </script>
 </x-auth-layout>
